@@ -557,13 +557,16 @@ button { font: inherit; cursor: pointer; }
 
 .intro.is-card .intro__card {
   visibility: visible;
-  animation: card-in 0.85s cubic-bezier(0.2, 0.7, 0.3, 1) 0.05s forwards;
+  animation: card-in 0.9s cubic-bezier(0.2, 0.7, 0.3, 1) 0.05s forwards;
 }
 
 .intro.is-leaving .intro__card { animation: card-out 0.95s ease forwards; }
 
+/* The card grows out of the risen letter (which sits viewport-centred at
+   roughly half the card's size) instead of fading in over it — one
+   continuous "the letter unfolds" gesture. */
 @keyframes card-in {
-  from { opacity: 0; transform: scale(0.94); }
+  from { opacity: 0; transform: scale(0.52); }
   to   { opacity: 1; transform: none; }
 }
 

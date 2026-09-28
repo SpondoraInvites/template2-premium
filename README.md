@@ -13,7 +13,7 @@ gold dust rising, a wax seal bearing the couple's initials. Tapping the seal:
 1. the wax **cracks** with a gold sparkle burst,
 2. the flap **swings open in 3D** (gold-lined inside),
 3. the letter **rises out** of the pocket,
-4. a full-screen **title card** unfolds — ornament, names, date,
+4. it immediately **unfolds into** a full-screen title card — ornament, names, date,
 5. the card fades into the invitation, whose hero **cascades in**.
 
 Impatient guests can click anywhere mid-sequence (or press `Esc`) to

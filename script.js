@@ -381,7 +381,9 @@
   var sealBtn = $("#introSeal");
   var skipBtn = $("#introSkip");
 
-  var TIMING = { flap: 350, letter: 1300, card: 2600, leave: 4300, done: 5250 };
+  // The title card starts unfolding almost as soon as the letter finishes
+  // rising, then remains full-screen long enough to read.
+  var TIMING = { flap: 350, letter: 1300, card: 2500, leave: 4800, done: 5800 };
   var timers = [];
   var seqStarted = false;
   var seqFinished = false;
