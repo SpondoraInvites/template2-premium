@@ -394,9 +394,13 @@
     timers = [];
   }
 
+  function revealHero() {
+    document.body.classList.add("is-live");
+  }
+
   function unlockAndReveal() {
     document.body.classList.remove("is-locked");
-    document.body.classList.add("is-live");
+    revealHero();
     // Hand focus to the content so keyboard guests aren't stranded.
     var hero = $(".hero");
     if (hero) {
@@ -449,7 +453,10 @@
       envelope.classList.add("is-parked");
       if (intro) intro.classList.add("is-card");
     });
-    at(TIMING.leave, function () { if (intro) intro.classList.add("is-leaving"); });
+    at(TIMING.leave, function () {
+      revealHero();
+      if (intro) intro.classList.add("is-leaving");
+    });
     at(TIMING.done, finishIntro);
   }
 
@@ -459,7 +466,10 @@
     if (envelope) envelope.classList.add("is-flap", "is-letter", "is-parked");
     if (intro) {
       intro.classList.add("is-card");
-      at(150, function () { intro.classList.add("is-leaving"); });
+      at(150, function () {
+        revealHero();
+        intro.classList.add("is-leaving");
+      });
     }
     at(1000, finishIntro);
   }

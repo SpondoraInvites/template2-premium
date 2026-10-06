@@ -80,7 +80,7 @@ const INVITE_CONFIG = {
 
   /* ---------- Closing ---------- */
   closing: "We can\u2019t wait to celebrate with you",
-  credit: "Crafted with \u2665 \u2014 Your Studio Name",
+  credit: "Crafted with \u2665 \u2014 Spondora Invites",
 
   /* ---------- Bangla (বাংলা) ----------
      Mirror of the client-visible content, shown when the visitor switches
@@ -131,7 +131,7 @@ const INVITE_CONFIG = {
     },
 
     closing: "আপনাদের সঙ্গে উদ্‌যাপনে অধীর আগ্রহে অপেক্ষায় আছি",
-    credit: "\u2665 দিয়ে নির্মিত — Your Studio Name",
+    credit: "\u2665 দিয়ে নির্মিত — Spondora Invites",
   },
 };
 

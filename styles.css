@@ -135,6 +135,13 @@ button { font: inherit; cursor: pointer; }
 
 .intro.is-done { display: none; }
 
+/* Crossfade the complete paper scene into the already-revealing hero. */
+.intro.is-leaving {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .intro__backdrop {
   position: absolute;
   inset: 0;
@@ -400,6 +407,9 @@ button { font: inherit; cursor: pointer; }
 
 .flap__face--inner {
   transform: rotateX(180deg);
+  /* Mirrored triangle: the face's own 180° cancels the flap's 180°, so
+     this is what actually shows when open — apex must point up. */
+  clip-path: polygon(0 100%, 50% 0, 100% 100%);
   background: linear-gradient(180deg, #caa455 0%, #a5813a 80%);
 }
 
@@ -560,7 +570,7 @@ button { font: inherit; cursor: pointer; }
   animation: card-in 0.9s cubic-bezier(0.2, 0.7, 0.3, 1) 0.05s forwards;
 }
 
-.intro.is-leaving .intro__card { animation: card-out 0.95s ease forwards; }
+.intro.is-leaving .intro__card { animation: card-drift-out 1s ease forwards; }
 
 /* The card grows out of the risen letter (which sits viewport-centred at
    roughly half the card's size) instead of fading in over it — one
@@ -570,9 +580,9 @@ button { font: inherit; cursor: pointer; }
   to   { opacity: 1; transform: none; }
 }
 
-@keyframes card-out {
-  from { opacity: 1; }
-  to   { opacity: 0; transform: scale(1.05); }
+@keyframes card-drift-out {
+  from { transform: none; }
+  to   { transform: scale(1.025); }
 }
 
 .intro__card::before {
