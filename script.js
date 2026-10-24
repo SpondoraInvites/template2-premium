@@ -61,6 +61,8 @@
       linkCopied: "Link copied to clipboard",
       shareText: "You\u2019re invited \u2014 {names} \u00B7 {date} \u00B7 {city}",
       calendarDetails: "We would be honoured by your presence. {hashtag}",
+      followInstagram: "Spondora Invites on Instagram",
+      followFacebook: "Spondora Invites on Facebook",
       switchTo: "Switch to Bangla",
     },
     bn: {
@@ -98,6 +100,8 @@
       linkCopied: "লিংক কপি হয়েছে",
       shareText: "আপনি আমন্ত্রিত \u2014 {names} \u00B7 {date} \u00B7 {city}",
       calendarDetails: "আপনাদের উপস্থিতিই আমাদের সৌভাগ্য। {hashtag}",
+      followInstagram: "ইনস্টাগ্রামে স্পন্দোরা ইনভাইটস",
+      followFacebook: "ফেসবুকে স্পন্দোরা ইনভাইটস",
       switchTo: "ইংরেজিতে পরিবর্তন করুন",
     },
   };

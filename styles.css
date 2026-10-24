@@ -1374,6 +1374,34 @@ button { font: inherit; cursor: pointer; }
   color: rgba(236, 217, 160, 0.9);
 }
 
+.footer__socials {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.footer__socials a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: var(--gold-pale);
+  border: 1px solid rgba(201, 162, 77, 0.55);
+  border-radius: 999px;
+  transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+
+.footer__socials a:hover,
+.footer__socials a:focus-visible {
+  background: var(--gold);
+  color: var(--wine-ink);
+  transform: translateY(-1px);
+}
+
+.footer__socials svg { width: 17px; height: 17px; }
+
 .footer__credit {
   margin: 26px 0 0;
   font-size: 11px;
