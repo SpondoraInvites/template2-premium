@@ -52,6 +52,11 @@
       shareInvitation: "Share this Invitation",
       shareAria: "Share this invitation",
       share: "Share",
+      shareCopy: "Copy Link",
+      shareWhatsapp: "WhatsApp",
+      shareMessenger: "Messenger",
+      shareTelegram: "Telegram",
+      shareEmail: "Email",
       viewOnMap: "View on Map \u2197",
       addToCalendar: "Add to Calendar \u2197",
       labelDate: "Date",
@@ -91,6 +96,11 @@
       shareInvitation: "এই আমন্ত্রণটি শেয়ার করুন",
       shareAria: "এই আমন্ত্রণটি শেয়ার করুন",
       share: "শেয়ার",
+      shareCopy: "লিংক কপি করুন",
+      shareWhatsapp: "হোয়াটসঅ্যাপ",
+      shareMessenger: "মেসেঞ্জার",
+      shareTelegram: "টেলিগ্রাম",
+      shareEmail: "ইমেইল",
       viewOnMap: "মানচিত্রে দেখুন \u2197",
       addToCalendar: "ক্যালেন্ডারে যোগ করুন \u2197",
       labelDate: "তারিখ",
@@ -560,7 +570,11 @@
     setInterval(tick, 1000);
   }
 
-  /* ============ 7. Share ============ */
+  /* ============ 7. Share — channel menu (like template5) ============
+     Every [data-share-button] opens the channel options it controls via
+     aria-controls: copy link, WhatsApp, Messenger, Telegram, email.
+     No backend: channels compose prefilled links; copying has a legacy
+     fallback for plain http. */
   var toast = $("#toast");
   var toastTimer;
 
@@ -572,32 +586,33 @@
     toastTimer = setTimeout(function () { toast.classList.remove("is-visible"); }, 2600);
   }
 
-  function share() {
-    var data = {
-      title: document.title,
-      text: t.shareText
-        .replace("{names}", c.couple.name1 + " " + t.nameSep + " " + c.couple.name2)
-        .replace("{date}", c.dateDisplay)
-        .replace("{city}", c.city),
-      url: location.origin === "null" || location.protocol === "file:"
-        ? "https://your-invite-link.example"
-        : location.href,
+  var shareUrl = location.origin === "null" || location.protocol === "file:"
+    ? "https://your-invite-link.example"
+    : location.href;
+
+  function shareText() {
+    return t.shareText
+      .replace("{names}", c.couple.name1 + " " + t.nameSep + " " + c.couple.name2)
+      .replace("{date}", c.dateDisplay)
+      .replace("{city}", c.city);
+  }
+  var enc = encodeURIComponent;
+  var openExternal = function (url) { window.open(url, "_blank", "noopener"); };
+
+  function copyLink(btn) {
+    var original = btn.textContent;
+    var ok = function () {
+      btn.textContent = t.linkCopied;
+      setTimeout(function () { btn.textContent = original; }, 1600);
     };
-    if (navigator.share) {
-      navigator.share(data).catch(function () { /* user dismissed */ });
-      return;
-    }
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(data.url).then(
-        function () { showToast(t.linkCopied); },
-        function () { fallbackCopy(data.url); }
-      );
+      navigator.clipboard.writeText(shareUrl).then(ok, function () { fallbackCopy(shareUrl, ok); });
       return;
     }
-    fallbackCopy(data.url);
+    fallbackCopy(shareUrl, ok);
   }
 
-  function fallbackCopy(text) {
+  function fallbackCopy(text, onDone) {
     var ta = document.createElement("textarea");
     ta.value = text;
     ta.setAttribute("readonly", "");
@@ -607,29 +622,77 @@
     ta.select();
     try {
       document.execCommand("copy");
-      showToast(t.linkCopied);
+      if (onDone) onDone();
     } catch (e) {
-      showToast(text);
+      showToast(text); // nothing more we can do — show the link itself
     }
     document.body.removeChild(ta);
   }
 
-  ["#shareBtn", "#shareFab"].forEach(function (sel) {
-    var btn = $(sel);
-    if (btn) btn.addEventListener("click", share);
+  var shareActions = {
+    // shortcut: deep link only opens the Messenger app (mobile); the desktop
+    // web dialog needs a registered Facebook app ID
+    messenger: function () { openExternal("fb-messenger://share/?link=" + enc(shareUrl)); },
+    whatsapp: function () { openExternal("https://wa.me/?text=" + enc(shareText() + "\n" + shareUrl)); },
+    telegram: function () { openExternal("https://t.me/share/url?url=" + enc(shareUrl) + "&text=" + enc(shareText())); },
+    email: function () { location.href = "mailto:?subject=" + enc(shareText()) + "&body=" + enc(shareText() + "\n" + shareUrl); },
+  };
+  shareActions.copy = copyLink;
+
+  var sharePairs = [];
+
+  $$("[data-share-button]").forEach(function (button) {
+    var menu = document.getElementById(button.getAttribute("aria-controls") || "");
+    if (!menu) return;
+    menu.hidden = false; // JS is healthy — the .open class takes over
+
+    var setOpen = function (openState) {
+      menu.classList.toggle("open", openState);
+      button.setAttribute("aria-expanded", String(openState));
+    };
+
+    button.addEventListener("click", function () {
+      setOpen(!menu.classList.contains("open"));
+    });
+    document.addEventListener("click", function (e) {
+      if (menu.classList.contains("open") &&
+          !menu.contains(e.target) &&
+          e.target.closest("[data-share-button]") !== button) {
+        setOpen(false);
+      }
+    });
+    Object.keys(shareActions).forEach(function (key) {
+      var b = menu.querySelector('[data-share="' + key + '"]');
+      if (!b) return;
+      b.addEventListener("click", function () {
+        shareActions[key](b);
+        if (key !== "copy") setOpen(false);
+      });
+    });
+    sharePairs.push({ button: button, menu: menu, setOpen: setOpen });
   });
 
-  /* ============ 8. Floating share pill appears after hero ============ */
-  var fab = $("#shareFab");
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Escape") return;
+    sharePairs.forEach(function (p) {
+      if (p.menu.classList.contains("open")) {
+        p.setOpen(false);
+        p.button.focus();
+      }
+    });
+  });
+
+  /* ====== 8. Floating share wrapper appears after hero ====== */
+  var floatShare = $("#floatShare");
   var hero = $(".hero");
-  if (fab && hero && "IntersectionObserver" in window) {
+  if (floatShare && hero && "IntersectionObserver" in window) {
     new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
-        fab.classList.toggle("is-visible", !e.isIntersecting);
+        floatShare.classList.toggle("is-visible", !e.isIntersecting);
       });
     }, { rootMargin: "-72px 0px 0px 0px" }).observe(hero);
-  } else if (fab) {
-    fab.classList.add("is-visible");
+  } else if (floatShare) {
+    floatShare.classList.add("is-visible");
   }
 
   /* ============ 9. Reveal on scroll ============ */

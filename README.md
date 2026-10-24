@@ -38,7 +38,9 @@ intro: {
 - Event details (unlimited event cards — side by side on desktop)
 - Venue with Google Maps embed + directions (split details/map on desktop)
 - Add-to-Calendar (Google Calendar) per event
-- Shareable link (Web Share API + copy-link fallback)
+- Share menu — Copy link, WhatsApp, Messenger, Telegram and Email — attached
+  to the footer's share button and to a floating pill that slides in once the
+  hero scrolls away; each channel prefills the message + link
 - Mobile optimized; desktop gets a full-width layout (gilded frame hero with
   flanking botanical branches, families side by side, event card grid,
   two-column venue section)

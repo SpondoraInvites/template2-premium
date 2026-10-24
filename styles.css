@@ -1366,6 +1366,69 @@ button { font: inherit; cursor: pointer; }
   transform: translateY(-1px);
 }
 
+/* Share — button opens a pill menu (copy / whatsapp / messenger / telegram / email) */
+.share {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+}
+
+.share-menu {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px;
+  background: var(--paper);
+  border: 1px solid var(--gold-line);
+  border-radius: 999px;
+  box-shadow: 0 12px 32px -10px rgba(36, 8, 19, 0.55);
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, -8px);
+  transition: opacity 0.28s ease, transform 0.28s ease, visibility 0s linear 0.28s;
+  /* Overlay as a dropdown below the button — opening never reflows the page. */
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  width: max-content;
+  max-width: min(92vw, 420px);
+  z-index: 55;
+}
+
+.share-menu[hidden] { display: none; }
+
+.share-menu.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+  transition: opacity 0.28s ease, transform 0.28s ease;
+}
+
+.share-menu button {
+  appearance: none;
+  font-family: var(--sans);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--wine);
+  background: transparent;
+  border: 1px solid rgba(201, 162, 77, 0.7);
+  border-radius: 999px;
+  padding: 9px 16px;
+  cursor: pointer;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.share-menu button:hover,
+.share-menu button:focus-visible {
+  background: var(--gold);
+  color: var(--wine-ink);
+}
+
 .footer__hashtag {
   margin: 26px 0 0;
   font-size: 11.5px;
@@ -1464,12 +1527,33 @@ button { font: inherit; cursor: pointer; }
 .lang-toggle:hover,
 .lang-toggle:focus-visible { background: var(--gold-pale); }
 
-.share-fab {
+/* Floating share — pill menu + button, slides in after the hero */
+.float-share {
   position: fixed;
   left: 50%;
   bottom: calc(18px + env(safe-area-inset-bottom, 0px));
-  transform: translateX(-50%) translateY(0);
+  transform: translateX(-50%);
   z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.35s ease, visibility 0s linear 0.35s;
+}
+
+.float-share.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity 0.35s ease;
+}
+
+/* the .is-visible / .open transforms live on the wrapper and its menu */
+
+.share-fab {
   display: inline-flex;
   align-items: center;
   gap: 9px;
@@ -1483,16 +1567,20 @@ button { font: inherit; cursor: pointer; }
   border: 1px solid var(--gold);
   border-radius: 999px;
   box-shadow: 0 10px 30px -8px rgba(36, 8, 19, 0.6);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.35s ease, transform 0.35s ease, background 0.3s ease;
+  transition: background 0.3s ease;
 }
 
 .share-fab svg { width: 16px; height: 16px; }
 
-.share-fab.is-visible { opacity: 1; pointer-events: auto; }
-
 .share-fab:hover { background: var(--gold-pale); }
+
+.share-menu--float {
+  top: auto;
+  bottom: calc(100% + 10px);
+  transform: translate(-50%, 8px); /* enters from below */
+}
+
+.share-menu--float.open { transform: translate(-50%, 0); }
 
 .toast {
   position: fixed;
